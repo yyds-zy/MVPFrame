@@ -20,6 +20,7 @@ public class PreviewActivity extends AppCompatActivity implements PreViewContrac
     @BindView(R.id.image)
     ImageView image;
     PreViewContract.Presenter presenter;
+    public static final String TAG = "PreviewActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class PreviewActivity extends AppCompatActivity implements PreViewContrac
         ButterKnife.bind(this);
         String pic_url = getIntent().getStringExtra("pic_url");
         presenter = new PrePresenterImp(this);
-        Log.d("xuezhiyuan","http://log.free.svipss.top/Log/showFile?uin="+pic_url);
+        Log.d(TAG,"http://log.free.svipss.top/Log/showFile?uin="+pic_url);
         presenter.loadPic(this,"http://log.free.svipss.top/Log/showFile?uin="+pic_url,image);
     }
 
