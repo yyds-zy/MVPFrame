@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">文件</string>
+    <string name="upload_pic">上传图片</string>
+    <string name="uploading">上传中</string>
+</resources>
