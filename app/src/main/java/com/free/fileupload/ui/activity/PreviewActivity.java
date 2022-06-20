@@ -35,6 +35,6 @@ public class PreviewActivity extends AppCompatActivity implements PreViewContrac
 
     @Override
     public void showMsg() {
-        Toast.makeText(this,"开始加载",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,R.string.start_loading,Toast.LENGTH_SHORT).show();
     }
 }
