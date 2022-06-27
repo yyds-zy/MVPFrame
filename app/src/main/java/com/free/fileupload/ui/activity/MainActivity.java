@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.Image;
 import android.net.Uri;
@@ -34,6 +35,7 @@ import com.free.fileupload.ui.view.SwipeFlushView;
 import com.free.fileupload.util.MemoryCacheDataUtils;
 import com.google.gson.Gson;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -70,9 +72,6 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        long l = Runtime.getRuntime().maxMemory();
-
-        Toast.makeText(this,""+l,Toast.LENGTH_SHORT).show();
         mFileData = new ArrayList<>();
         adapter = new FileListAdapter(mFileData,this);
         //  loginPresent = new LoginPresentImpl(new LoginModelImpl(),this);
@@ -84,9 +83,14 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
         fileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this,PreviewActivity.class);
-                intent.putExtra("pic_url",mFileData.get(i).getUin());
-                startActivity(intent);
+                String fileExtension = mFileData.get(i).getFileExtension();
+                if (fileExtension.equals("jpg") || fileExtension.equals("png")) {
+                    Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
+                    intent.putExtra("pic_url", mFileData.get(i).getUin());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this, "此文件不是图片", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         adapter.notifyDataSetChanged();
@@ -159,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
         List<FileBean.DataBean> dataBeans = fileBean.getData();
         mFileData.addAll(dataBeans);
         adapter.notifyDataSetChanged();
-        //Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -192,8 +195,16 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
 
             try {
                 InputStream is = contentResolver.openInputStream(uri);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize=2;//宽高压缩为原来的1/2
+                options.inPreferredConfig=Bitmap.Config.ARGB_4444;
+                Bitmap bitmap = BitmapFactory.decodeStream(is,null,options);
+
                 File cache = new File(context.getCacheDir().getAbsolutePath(), displayName);
                 FileOutputStream fos = new FileOutputStream(cache);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+
                 FileUtils.copy(is, fos);
                 file = cache;
                 fos.close();

@@ -29,12 +29,12 @@ public class PreviewActivity extends AppCompatActivity implements PreViewContrac
         ButterKnife.bind(this);
         String pic_url = getIntent().getStringExtra("pic_url");
         presenter = new PrePresenterImp(this);
-        Log.d(TAG,"http://log.free.svipss.top/Log/showFile?uin="+pic_url);
-        presenter.loadPic(this,"http://log.free.svipss.top/Log/showFile?uin="+pic_url,image);
+        Log.d(TAG, "http://log.free.svipss.top/Log/showFile?uin=" + pic_url);
+        presenter.loadPic(this, "http://log.free.svipss.top/Log/showFile?uin=" + pic_url, image);
     }
 
     @Override
     public void showMsg() {
-        Toast.makeText(this,R.string.start_loading,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.start_loading, Toast.LENGTH_SHORT).show();
     }
 }

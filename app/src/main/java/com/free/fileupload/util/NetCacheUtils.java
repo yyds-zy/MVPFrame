@@ -62,8 +62,8 @@ public class NetCacheUtils {
             if (responseCode == 200) {
                 //图片压缩
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize=2;//宽高压缩为原来的1/2
-                options.inPreferredConfig=Bitmap.Config.ARGB_4444;
+                options.inSampleSize=1;//宽高压缩为原来的1/2
+                options.inPreferredConfig=Bitmap.Config.ARGB_8888;
                 Bitmap bitmap = BitmapFactory.decodeStream(conn.getInputStream(),null,options);
                 return bitmap;
             }
