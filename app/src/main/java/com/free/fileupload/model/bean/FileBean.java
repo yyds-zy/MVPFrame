@@ -1,8 +1,12 @@
 package com.free.fileupload.model.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class FileBean {
+public class FileBean implements Parcelable {
 
     /**
      * code : 200
@@ -78,7 +82,17 @@ public class FileBean {
         this.data = data;
     }
 
-    public static class DataBean {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+    }
+
+    public static class DataBean implements Parcelable {
         /**
          * id : 22
          * uin : 1654486319157
@@ -98,6 +112,46 @@ public class FileBean {
         private String fileUpTime;
         private String fileSize;
         private int fileState;
+
+        protected DataBean(Parcel in) {
+            id = in.readInt();
+            uin = in.readString();
+            fileName = in.readString();
+            filePath = in.readString();
+            fileExtension = in.readString();
+            fileUpTime = in.readString();
+            fileSize = in.readString();
+            fileState = in.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(id);
+            dest.writeString(uin);
+            dest.writeString(fileName);
+            dest.writeString(filePath);
+            dest.writeString(fileExtension);
+            dest.writeString(fileUpTime);
+            dest.writeString(fileSize);
+            dest.writeInt(fileState);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {
+            @Override
+            public DataBean createFromParcel(Parcel in) {
+                return new DataBean(in);
+            }
+
+            @Override
+            public DataBean[] newArray(int size) {
+                return new DataBean[size];
+            }
+        };
 
         public int getId() {
             return id;

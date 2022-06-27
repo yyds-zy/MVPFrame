@@ -45,6 +45,7 @@ public class MemoryCacheUtils {
 
 
     public void addBitmapToMemoryCache(String name,Bitmap bitmap){
+        if (bitmap == null) return;
         if (getBitmapFromMemCache(name) == null) {
             mLruCache.put(name, bitmap);
         }

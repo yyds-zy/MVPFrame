@@ -11,6 +11,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileUtils;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -40,6 +41,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -87,6 +89,10 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
                 if (fileExtension.equals("jpg") || fileExtension.equals("png")) {
                     Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
                     intent.putExtra("pic_url", mFileData.get(i).getUin());
+                    intent.putExtra("position",i);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList("list", (ArrayList<? extends FileBean.DataBean>) mFileData);
+                    intent.putExtra("bundle",bundle);
                     startActivity(intent);
                 } else {
                     Toast.makeText(MainActivity.this, "此文件不是图片", Toast.LENGTH_SHORT).show();
