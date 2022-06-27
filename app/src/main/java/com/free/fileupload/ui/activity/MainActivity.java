@@ -31,6 +31,7 @@ import com.free.fileupload.model.UpLoadModelImp;
 import com.free.fileupload.presenter.UpLoadPersenterImp;
 import com.free.fileupload.ui.adapter.FileListAdapter;
 import com.free.fileupload.ui.view.SwipeFlushView;
+import com.free.fileupload.util.MemoryCacheDataUtils;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
     SwipeFlushView srlSwipeRefreshLayout;
 
     private List<FileBean.DataBean> mFileData;
-
     private UpLoadContract.UpLoadPresenter upLoadPresenter;
     private FileListAdapter adapter;
     private int currentPager = 1;
@@ -70,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        long l = Runtime.getRuntime().maxMemory();
+
+        Toast.makeText(this,""+l,Toast.LENGTH_SHORT).show();
         mFileData = new ArrayList<>();
         adapter = new FileListAdapter(mFileData,this);
         //  loginPresent = new LoginPresentImpl(new LoginModelImpl(),this);
@@ -90,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
         srlSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                srlSwipeRefreshLayout.setRefreshing(false);
                 upLoadPresenter.showFileList(currentPager,pageSize);
             }
         });
@@ -97,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
         srlSwipeRefreshLayout.setOnLoadListener(new SwipeFlushView.OnLoadListener() {
             @Override
             public void onLoad() {
+                srlSwipeRefreshLayout.setLoading(false);
+                currentPager ++;
                 upLoadPresenter.showFileList(currentPager,pageSize);
             }
         });
@@ -121,15 +127,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
             case GALLERY:
                 if (data != null && data.getData() != null) {
                     Uri imageUri = data.getData();
-                    Bitmap imageBitmap = null;
-                    try {
-                        imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imageUri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Bitmap newImageBitmap = scaleBitmap(imageBitmap,(float)0.5);
-                    Uri newUri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),newImageBitmap,"IMG"+ Calendar.getInstance().getTime(),null));
-                    File file = uriToFileApiQ(newUri, this);
+                    File file = uriToFileApiQ(imageUri, this);
                     upLoadPresenter.upLoadFile(file);
                 }
                 break;
@@ -161,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
         List<FileBean.DataBean> dataBeans = fileBean.getData();
         mFileData.addAll(dataBeans);
         adapter.notifyDataSetChanged();
-        Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
     }
 
     @Override

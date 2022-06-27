@@ -2,21 +2,15 @@ package com.free.fileupload.model;
 
 import android.os.Handler;
 import android.os.Message;
-
 import androidx.annotation.NonNull;
-
 import com.free.fileupload.contract.ResCodeDef;
 import com.free.fileupload.contract.UpLoadContract;
 import com.free.fileupload.contract.UrlDef;
 import com.free.fileupload.util.OkHttpClientUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -33,23 +27,17 @@ public class UpLoadModelImp implements UpLoadContract.UpLoadModel {
     private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
     private final OkHttpClient mClient = OkHttpClientUtils.getOkHttpClient();
     private OnRequestListener mListener;
+    private File mFile;
 
     @Override
     public void showFileList(int currentPage,int pageSize,OnRequestListener listener) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("currentPage",currentPage);
-            jsonObject.put("pageSize",pageSize);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JSON,jsonObject.toString());
-        RequestBody body = new MultipartBody.Builder()
-                .addPart(requestBody)
+        RequestBody requestBody = new FormBody.Builder()
+                .add("currentPage", String.valueOf(currentPage))
+                .add("pageSize", String.valueOf(pageSize))
                 .build();
         Request request = new Request.Builder()
                 .url(UrlDef.URL_QUERY_FILE_LIST)
-                .post(body)
+                .post(requestBody)
                 .build();
         mClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -75,6 +63,7 @@ public class UpLoadModelImp implements UpLoadContract.UpLoadModel {
     @Override
     public void upLoadFile(File file, OnRequestListener listener) {
         if (file.exists()) {
+            mFile = file;
             RequestBody requestBody = RequestBody.create(MEDIA_TYPE_FILE,file);
             RequestBody body = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
@@ -111,6 +100,12 @@ public class UpLoadModelImp implements UpLoadContract.UpLoadModel {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
+            if (mFile != null) {
+                File file = new File(mFile.getPath());
+                if (file.exists()) {
+                    file.delete();
+                }
+            }
             if (msg.what == 0) {
                 mListener.onSuccess((String) msg.obj);
             }else {
@@ -118,4 +113,7 @@ public class UpLoadModelImp implements UpLoadContract.UpLoadModel {
             }
         }
     };
+
+
+
 }

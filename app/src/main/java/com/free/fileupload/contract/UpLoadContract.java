@@ -1,7 +1,6 @@
 package com.free.fileupload.contract;
 
 import java.io.File;
-import java.util.List;
 
 public interface UpLoadContract {
     interface UpLoadPresenter {
