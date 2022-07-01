@@ -1,16 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="90dp"
     android:background="#3F3F3F"
     android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tv_fileName"
-        android:text="FileName"
-        android:textColor="#fff"
-        android:gravity="center"
-        android:layout_marginLeft="50dp"
+<!--    <TextView-->
+<!--        android:id="@+id/tv_id"-->
+<!--        android:text="id"-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:textColor="#fff"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"/>-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_fileName"-->
+<!--        android:text="FileName"-->
+<!--        android:textColor="#fff"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_marginLeft="50dp"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="50dp"/>-->
+
+
+
+    <RelativeLayout
+        android:id="@+id/rl_layout"
+        android:layout_margin="5dp"
+        android:background="@drawable/image_round_shape"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"/>
-</LinearLayout>
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_img"
+            android:scaleType="fitXY"
+            android:layout_width="110dp"
+            android:layout_height="80dp"/>
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_margin="5dp"
+        android:textColor="#fff"
+        android:text="baby老师最近上综艺"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/rl_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tv_context"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="#fff"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:text="新金牌娱乐观察家知道，小海绵是baby和黄晓明老师的孩子，2017年在香港出生，一转眼已经5岁了。这个年纪的男孩子，通常都要开始学习网课了。不过小海绵和其他小孩子一样，平时玩游戏就可以，但是一上网课就很抗拒。"
+        android:textSize="10sp"
+        android:layout_below="@+id/tv_title"
+        android:layout_toRightOf="@+id/rl_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="38dp"/>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_margin="5dp"
+        android:textColor="#ffffff"
+        android:text="发布时间：2022-07-01 11:28:46:392"
+        android:textSize="10sp"
+        android:textStyle="italic"
+        android:layout_toRightOf="@id/rl_layout"
+        android:layout_below="@+id/tv_context"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:background="#D1CECE"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="1sp"/>
+</RelativeLayout>

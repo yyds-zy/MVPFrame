@@ -16,13 +16,27 @@ import java.net.URL;
  * 网络缓存
  */
 public class NetCacheUtils {
-
-    private LocalCacheUtils localCacheUtils;
     private Context mContext;
 
-    public NetCacheUtils(Context context,LocalCacheUtils localCacheUtils){
+    private static NetCacheUtils instance;
+    private NetCacheUtils(){
+
+    }
+
+    public static NetCacheUtils getInstance() {
+        if (instance == null) {
+            synchronized (NetCacheUtils.class) {
+                if (instance == null) {
+                    instance = new NetCacheUtils();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public NetCacheUtils setContext(Context context){
         mContext = context;
-        this.localCacheUtils = localCacheUtils;
+        return this;
     }
 
     public void getBitmapForNet(String pic_url, ImageView imageView) {
@@ -44,8 +58,7 @@ public class NetCacheUtils {
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             iv_image.setImageBitmap(bitmap);
-            Toast.makeText(mContext,"网络缓存中找到了",Toast.LENGTH_SHORT).show();
-            localCacheUtils.setBitmapToLocal(url,bitmap);
+            LocalCacheUtils.getInstance().setPath(mContext).setBitmapToLocal(url,bitmap);
             //这里不对  需要优化
             MemoryCacheUtils.getInstance().addBitmapToMemoryCache(url,bitmap);
         }

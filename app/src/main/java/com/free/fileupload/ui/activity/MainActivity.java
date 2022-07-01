@@ -1,66 +1,56 @@
 package com.free.fileupload.ui.activity;
 
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.FileUtils;
-import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.free.fileupload.R;
 import com.free.fileupload.contract.LoginView;
 import com.free.fileupload.contract.UpLoadContract;
-import com.free.fileupload.model.bean.FileBean;
 import com.free.fileupload.model.UpLoadModelImp;
+import com.free.fileupload.model.bean.FileBean;
 import com.free.fileupload.presenter.UpLoadPersenterImp;
+import com.free.fileupload.ui.BaseActivity;
 import com.free.fileupload.ui.adapter.FileListAdapter;
 import com.free.fileupload.ui.view.SwipeFlushView;
-import com.free.fileupload.util.MemoryCacheDataUtils;
+import com.free.fileupload.util.FileUtils;
 import com.google.gson.Gson;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements LoginView, UpLoadContract.UpLoadView {
+public class MainActivity extends BaseActivity implements LoginView, UpLoadContract.UpLoadView {
 
     public static final int GALLERY = 2;
     @BindView(R.id.btn_up_pic)
     Button btnUpPic;
-    @BindView(R.id.btn_find_file_list)
+    @BindView(R.id.sp_btn)
     Button btnFindFileList;
     @BindView(R.id.file_list)
     ListView fileList;
     @BindView(R.id.srl_swipe_refresh_layout)
     SwipeFlushView srlSwipeRefreshLayout;
+    @BindView(R.id.mmkv_btn)
+    Button mmkvBtn;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.meau)
+    ImageView meau;
 
     private List<FileBean.DataBean> mFileData;
     private UpLoadContract.UpLoadPresenter upLoadPresenter;
@@ -70,33 +60,32 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
     private String mData;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        mFileData = new ArrayList<>();
-        adapter = new FileListAdapter(mFileData,this);
-        //  loginPresent = new LoginPresentImpl(new LoginModelImpl(),this);
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
 
+    @Override
+    protected void init() {
+        title.setText("新闻列表");
+        meau.setVisibility(View.VISIBLE);
+        mFileData = new ArrayList<>();
+        adapter = new FileListAdapter(mFileData, this);
         upLoadPresenter = new UpLoadPersenterImp(new UpLoadModelImp(), this);
-        upLoadPresenter.showFileList(currentPager,pageSize);
+        upLoadPresenter.showFileList(MainActivity.this, currentPager, pageSize);
 
         fileList.setAdapter(adapter);
-        fileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String fileExtension = mFileData.get(i).getFileExtension();
-                if (fileExtension.equals("jpg") || fileExtension.equals("png")) {
-                    Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
-                    intent.putExtra("pic_url", mFileData.get(i).getUin());
-                    intent.putExtra("position",i);
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("list", (ArrayList<? extends FileBean.DataBean>) mFileData);
-                    intent.putExtra("bundle",bundle);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(MainActivity.this, "此文件不是图片", Toast.LENGTH_SHORT).show();
-                }
+        fileList.setOnItemClickListener((adapterView, view, i, l) -> {
+            String fileExtension = mFileData.get(i).getFileExtension();
+            if (fileExtension.equals("jpg") || fileExtension.equals("png")) {
+                Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
+                intent.putExtra("pic_url", mFileData.get(i).getUin());
+                startActivity(intent);
+            } else if (fileExtension.equals("log") || fileExtension.equals("xml") || fileExtension.equals("txt") || fileExtension.equals("log") || fileExtension.equals("docx") || fileExtension.equals("pdf")) {
+                Intent intent = new Intent(MainActivity.this, FileCheckActivity.class);
+                intent.putExtra("file", mFileData.get(i).getUin());
+                startActivity(intent);
+            } else {
+                Toast.makeText(MainActivity.this, "暂不支持此文件类型", Toast.LENGTH_SHORT).show();
             }
         });
         adapter.notifyDataSetChanged();
@@ -104,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
             @Override
             public void onRefresh() {
                 srlSwipeRefreshLayout.setRefreshing(false);
-                upLoadPresenter.showFileList(currentPager,pageSize);
+                upLoadPresenter.showFileList(MainActivity.this, currentPager, pageSize);
             }
         });
 
@@ -112,20 +101,20 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
             @Override
             public void onLoad() {
                 srlSwipeRefreshLayout.setLoading(false);
-                currentPager ++;
-                upLoadPresenter.showFileList(currentPager,pageSize);
+                currentPager++;
+                upLoadPresenter.showFileList(MainActivity.this, currentPager, pageSize);
             }
         });
     }
 
 
-    @OnClick({R.id.btn_up_pic, R.id.btn_find_file_list})
+    @OnClick({R.id.btn_up_pic, R.id.sp_btn, R.id.mmkv_btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_up_pic:
                 chooseFromGallery();
                 break;
-            case R.id.btn_find_file_list:
+            case R.id.sp_btn:
                 break;
         }
     }
@@ -137,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
             case GALLERY:
                 if (data != null && data.getData() != null) {
                     Uri imageUri = data.getData();
-                    File file = uriToFileApiQ(imageUri, this);
+                    File file = FileUtils.uriToFileApiQ(imageUri, this);
                     upLoadPresenter.upLoadFile(file);
                 }
                 break;
@@ -163,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
 
     @Override
     public void upLoadSuccess(String data) {
-        Log.d("v_zyuanxue",data);
-        Gson gson=new Gson();
+        Log.d("v_zyuanxue", data);
+        Gson gson = new Gson();
         FileBean fileBean = gson.fromJson(data, FileBean.class);
         List<FileBean.DataBean> dataBeans = fileBean.getData();
         mFileData.addAll(dataBeans);
@@ -173,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
 
     @Override
     public void upLoadFail(String data) {
-        Log.d("xzy",data);
+        Log.d("xzy", data);
         Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
     }
 
@@ -187,56 +176,19 @@ public class MainActivity extends AppCompatActivity implements LoginView, UpLoad
 
     }
 
-    public static File uriToFileApiQ(Uri uri, Context context) {
-        File file = null;
-        if (uri == null) return file;
-        //android10以上转换
-        if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
-            file = new File(uri.getPath());
-        } else if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
-            //把文件复制到沙盒目录
-            ContentResolver contentResolver = context.getContentResolver();
-            String displayName = System.currentTimeMillis() + Math.round((Math.random() + 1) * 1000)
-                    + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(contentResolver.getType(uri));
-
-            try {
-                InputStream is = contentResolver.openInputStream(uri);
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize=2;//宽高压缩为原来的1/2
-                options.inPreferredConfig=Bitmap.Config.ARGB_4444;
-                Bitmap bitmap = BitmapFactory.decodeStream(is,null,options);
-
-                File cache = new File(context.getCacheDir().getAbsolutePath(), displayName);
-                FileOutputStream fos = new FileOutputStream(cache);
-                BufferedOutputStream bos = new BufferedOutputStream(fos);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
-
-                FileUtils.copy(is, fos);
-                file = cache;
-                fos.close();
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return file;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 
-    /**
-     * todo 压缩图片
-     * @param origin
-     * @param ratio
-     * @return
-     */
-    public Bitmap scaleBitmap(Bitmap origin, float ratio) {
-        if (origin == null) {
-            return null;
+    @OnClick(R.id.meau)
+    public void onViewClicked() {
+        if (btnUpPic.getVisibility() == View.GONE) {
+            btnUpPic.setVisibility(View.VISIBLE);
+        } else {
+            btnUpPic.setVisibility(View.GONE);
         }
-        int width = origin.getWidth();
-        int height = origin.getHeight();
-        Matrix matrix = new Matrix();
-        matrix.preScale(ratio, ratio);
-        Bitmap newBM = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
-        return newBM;
     }
 }

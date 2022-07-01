@@ -1,5 +1,7 @@
 package com.free.fileupload.presenter;
 
+import android.content.Context;
+
 import com.free.fileupload.contract.UpLoadContract;
 
 import java.io.File;
@@ -21,9 +23,9 @@ public class UpLoadPersenterImp implements UpLoadContract.UpLoadPresenter,UpLoad
     }
 
     @Override
-    public void showFileList(int currentPage, int pageSize) {
+    public void showFileList(Context context,int currentPage, int pageSize) {
         view.showProgress();
-        model.showFileList(currentPage,pageSize,this);
+        model.showFileList(context,currentPage,pageSize,this);
     }
 
     @Override

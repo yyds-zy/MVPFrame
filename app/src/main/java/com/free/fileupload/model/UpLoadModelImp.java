@@ -1,15 +1,19 @@
 package com.free.fileupload.model;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import androidx.annotation.NonNull;
 import com.free.fileupload.contract.ResCodeDef;
 import com.free.fileupload.contract.UpLoadContract;
 import com.free.fileupload.contract.UrlDef;
+import com.free.fileupload.util.FileUtils;
 import com.free.fileupload.util.OkHttpClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -28,15 +32,17 @@ public class UpLoadModelImp implements UpLoadContract.UpLoadModel {
     private final OkHttpClient mClient = OkHttpClientUtils.getOkHttpClient();
     private OnRequestListener mListener;
     private File mFile;
+    private Context mContext;
 
     @Override
-    public void showFileList(int currentPage,int pageSize,OnRequestListener listener) {
+    public void showFileList(Context context,int currentPage,int pageSize,OnRequestListener listener) {
+        mContext = context;
         RequestBody requestBody = new FormBody.Builder()
                 .add("currentPage", String.valueOf(currentPage))
                 .add("pageSize", String.valueOf(pageSize))
                 .build();
         Request request = new Request.Builder()
-                .url(UrlDef.URL_QUERY_FILE_LIST)
+                .url(UrlDef.BASE_DEBUG_URL+"queryFileList")
                 .post(requestBody)
                 .build();
         mClient.newCall(request).enqueue(new Callback() {
@@ -50,12 +56,15 @@ public class UpLoadModelImp implements UpLoadContract.UpLoadModel {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 mListener = listener;
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-                String string = response.body().string();
-                Message message = new Message();
-                message.obj = string;
-                message.what = 0;
-                handler.sendMessage(message);
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                } else {
+                    String string = response.body().string();
+                    Message message = new Message();
+                    message.obj = string;
+                    message.what = 0;
+                    handler.sendMessage(message);
+                }
             }
         });
     }
@@ -70,7 +79,7 @@ public class UpLoadModelImp implements UpLoadContract.UpLoadModel {
                     .addFormDataPart("file",file.getName(),requestBody)
                     .build();
             Request request = new Request.Builder()
-                    .url(UrlDef.URL_UPLOAD_FILE)
+                    .url(UrlDef.BASE_DEBUG_URL+"uploadLog")
                     .post(body)
                     .build();
             mClient.newCall(request).enqueue(new Callback() {
@@ -96,6 +105,7 @@ public class UpLoadModelImp implements UpLoadContract.UpLoadModel {
         }
     }
 
+    @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {

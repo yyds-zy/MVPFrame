@@ -3,19 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="#3F3F3F"
     tools:context=".ui.activity.MainActivity">
 
+    <include layout="@layout/layout_toolbar"/>
     <Button
-        android:text="上传图片"
+        android:text="上传信息"
         android:id="@+id/btn_up_pic"
+        android:background="#03A9F4"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <Button
-        android:text="查看文件列表"
+        android:text="sp_保存数据"
         android:visibility="gone"
-        android:id="@+id/btn_find_file_list"
+        android:id="@+id/sp_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:text="mmkv_保存数据"
+        android:visibility="gone"
+        android:id="@+id/mmkv_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
@@ -23,11 +37,11 @@
         android:id="@+id/srl_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF">
+        android:background="#3f3f3f">
 
         <ListView
             android:id="@+id/file_list"
-            android:background="#FFFFFF"
+            android:background="#3f3f3f"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"/>

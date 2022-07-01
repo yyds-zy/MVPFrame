@@ -4,28 +4,109 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
+    android:background="#3F3F3F"
     tools:context=".ui.activity.PreviewActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
 
-    <ImageView
-        android:id="@+id/image"
-        android:scaleType="fitCenter"
-        android:layout_gravity="center"
+    <ScrollView
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/up_pic"
-        android:text="上一张"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="如果你在关系中发现了对方「渣」的细节，一般情况下你会怎么做？\n
+今天分享的故事主角有些特别，她擅长「忽略」它们。
+\n
+以下，是她的自述。
+\n
+hi，我是京爷。
+\n
+我被朋友称为渣男收割机已经很久了。三段恋爱，都以对方出轨收场。
+\n
+对于这个外号，我是羞耻的。像这样丢脸的事，我竟然让它连续发生了三次。
+\n
+为什么会这样呢？
+\n
+第一段恋爱，发生在高二那年。我从理科转到文科班，很不适应。
+\n
+班上很多人都有小团体，我跟谁都不熟。于是我的同桌开始介绍这个老师是教什么的，性格怎么样，同学脾气怎么样等等，慢慢地就让我融入集体了。
+\n
+后来出去吃饭、看电影，他都表现得蛮绅士和贴心的。就这样，我们在一起了。
+\n
+那段时间，我喜欢拿他的手机玩消消乐。指纹解锁什么的，也从不避讳。
+\n
+转折点发生的那天，他突然不让我碰手机了。他说：「手机内存不够，我把消消乐卸载了。」
+\n
+也是从那天起，他发微信都喜欢轻轻地往内倾斜 10 度。
+\n
+结局待会再说。
+\n
+第二段恋爱，对象是我的青梅竹马。
+\n
+我们是异地恋，一年见不到 10 次面，每次我回老家，只要我出门，不管他在做什么，都会坚持开车接送，对来我家的不同路线烂熟于心，预计多久到，做到分毫不差。
+\n
+每次见面他都会牢牢牵住我，好像害怕松开手我就会消失不见。
+\n
+在一起时，我常被这些细节触动。
+\n
+记得后来我要过 20 岁生日，他说恋爱两年了，他要给我准备一份大礼，说要弥补我从 1 岁到 20 岁的生日礼物。我就一直期待一直期待。
+\n
+后来，我突然收到一箱零食。我问，这是我的生日礼物吗。他说对，还有还有。
+\n
+后来又多寄了一箱名创优品。
+\n
+我仔细数数，的确有 20 件。所以，是给每一岁的我送了一包团购的零食吗？
+\n
+问起这份礼物，他才说：「对不起我最近很忙，等我考上之后，再弥补你。」
+\n
+我说好，就等等看吧。结果等来的却是，我不小心看到他那段时间每天双排，对象都是同一个女生。
+\n
+关于分手的方式，我等等再说。
+\n
+人们总说事不过三。
+\n
+第三段恋爱，发生在我确诊情绪病的时候。那个男生能安抚我的情绪。更重要的是，兴趣爱好完全一致。我们因为滑板认识，滑板、潜水、冲浪、滑雪，干什么都带着我去。
+\n
+还记得第一次跟他看电影，是《地球最后的夜晚》。传说中的 2019 跨年之吻。11 点 57 分了，他忽然转过头来，望着我的眼睛，将电影里那一段台词念出来了：
+\n
+用刀尖入水
+\n
+用显微镜看雪
+\n
+即便反复如此
+\n
+还是想问一问
+\n
+你数过天上的星星吗
+\n
+它们和小鸟一样
+\n
+总在我胸口跳伞"
+                android:textColor="#FFF"
+                android:textSize="18dp" />
+        </LinearLayout>
 
 
-    <Button
-        android:id="@+id/next_pic"
-        android:text="下一张"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    </ScrollView>
+
+
 </RelativeLayout>

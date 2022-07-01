@@ -1,11 +1,13 @@
 package com.free.fileupload.contract;
 
+import android.content.Context;
+
 import java.io.File;
 
 public interface UpLoadContract {
     interface UpLoadPresenter {
         void upLoadFile(File file);
-        void showFileList(int currentPage,int pageSize);
+        void showFileList(Context context,int currentPage,int pageSize);
     }
 
     interface UpLoadModel {
@@ -15,7 +17,7 @@ public interface UpLoadContract {
             void onFail(String msg);
         }
 
-        void showFileList(int currentPage,int pageSize,OnRequestListener listener);
+        void showFileList(Context context,int currentPage, int pageSize, OnRequestListener listener);
 
         void upLoadFile(File file, OnRequestListener listener);
     }

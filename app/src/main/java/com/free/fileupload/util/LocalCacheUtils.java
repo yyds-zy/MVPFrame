@@ -16,9 +16,26 @@ public class LocalCacheUtils {
 
     public String CACHE_PATH;
 
-    public LocalCacheUtils(Context context) {
-        CACHE_PATH = context.getCacheDir().getAbsolutePath()+"/bitmaps";
-        //CACHE_PATH = context.getExternalCacheDir().getAbsolutePath()+"/bitmaps";
+    private static LocalCacheUtils instance;
+    private LocalCacheUtils(){
+
+    }
+
+    public static LocalCacheUtils getInstance() {
+        if (instance == null) {
+            synchronized (LocalCacheUtils.class) {
+                if (instance == null) {
+                    instance = new LocalCacheUtils();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public LocalCacheUtils setPath(Context context) {
+        //CACHE_PATH = context.getCacheDir().getAbsolutePath()+"/bitmaps";
+        CACHE_PATH = context.getExternalCacheDir().getAbsolutePath()+"/bitmaps";
+        return this;
     }
 
     public void setBitmapToLocal(String name, Bitmap bitmap){

@@ -5,18 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.free.fileupload.R;
+import com.free.fileupload.contract.UrlDef;
 import com.free.fileupload.model.bean.FileBean;
+import com.free.fileupload.util.MyBitmapUtils;
 
 import java.util.List;
 
 public class FileListAdapter extends BaseAdapter {
     private List<FileBean.DataBean> mFileDataList;   //创建一个StudentData 类的对象 集合
     private LayoutInflater inflater;
+    private Context mContext;
 
     public FileListAdapter(List<FileBean.DataBean> fileBeans, Context context) {
+        mContext = context;
         this.mFileDataList = fileBeans;
         this.inflater = LayoutInflater.from(context);
     }
@@ -42,16 +47,23 @@ public class FileListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.file_layout, null);
             holder = new ViewHolder();
-            holder.textView =  convertView.findViewById(R.id.tv_fileName);
+            holder.imageView = convertView.findViewById(R.id.iv_img);
+            holder.textView_title = convertView.findViewById(R.id.tv_title);
+            holder.textView_context =  convertView.findViewById(R.id.tv_context);
+            holder.textView_time = convertView.findViewById(R.id.tv_time);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.textView.setText(mFileDataList.get(position).getFileName());
+        MyBitmapUtils.getInstance().setContext(mContext).disPlay(holder.imageView, UrlDef.BASE_DEBUG_URL+"showFile?uin="+mFileDataList.get(position).getUin());
+        holder.textView_time.setText("发布时间："+mFileDataList.get(position).getFileUpTime());
+        holder.textView_context.setText(mFileDataList.get(position).getFilePath());
+        holder.textView_title.setText(mFileDataList.get(position).getFileExtension());
         return convertView;
     }
 
     class ViewHolder {
-        TextView textView;
+        ImageView imageView;
+        TextView textView_context,textView_time,textView_title;
     }
 }

@@ -5,15 +5,28 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 import android.widget.Toast;
 public class MyBitmapUtils {
-    private NetCacheUtils mNetCacheUtils;
-    private LocalCacheUtils mLocalCacheUtils;
     private Context mContext;
 
-    public MyBitmapUtils(Context context){
-        mContext = context;
+    private static MyBitmapUtils instance;
 
-        mLocalCacheUtils=new LocalCacheUtils(context);
-        mNetCacheUtils=new NetCacheUtils(mContext,mLocalCacheUtils);
+    private MyBitmapUtils(){
+
+    }
+
+    public static MyBitmapUtils getInstance() {
+        if (instance == null) {
+            synchronized (MyBitmapUtils.class) {
+                if (instance == null) {
+                    instance = new MyBitmapUtils();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public MyBitmapUtils setContext(Context context){
+        mContext = context;
+        return this;
     }
 
     public void disPlay(ImageView imageView,String url){
@@ -21,20 +34,17 @@ public class MyBitmapUtils {
         Bitmap bitmapToMemory = MemoryCacheUtils.getInstance().getBitmapFromMemCache(url);
         if (bitmapToMemory != null) {
             imageView.setImageBitmap(bitmapToMemory);
-            Toast.makeText(mContext,"内存中找到了",Toast.LENGTH_SHORT).show();
             return;
         }
 
         //如果内存没有再去内部存储缓存
-        Bitmap bitmapToLocal = mLocalCacheUtils.getBitmapToLocal(url);
+        Bitmap bitmapToLocal = LocalCacheUtils.getInstance().setPath(mContext).getBitmapToLocal(url);
         if (bitmapToLocal != null) {
             imageView.setImageBitmap(bitmapToLocal);
-            Toast.makeText(mContext,"磁盘中找到了",Toast.LENGTH_SHORT).show();
             MemoryCacheUtils.getInstance().addBitmapToMemoryCache(url,bitmapToLocal);
             return;
         }
-
         //如果内部存储没有再去网络缓存
-        mNetCacheUtils.getBitmapForNet(url,imageView);
+        NetCacheUtils.getInstance().setContext(mContext).getBitmapForNet(url,imageView);
     }
 }
