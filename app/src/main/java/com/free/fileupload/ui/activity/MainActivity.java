@@ -3,8 +3,9 @@ package com.free.fileupload.ui.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -59,6 +61,16 @@ public class MainActivity extends BaseActivity implements LoginView, UpLoadContr
     private int currentPager = 1;
     private int pageSize = 20;
     private String mData;
+    private boolean isClick;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                isClick = false;
+            }
+        }
+    };
 
     @Override
     protected int getLayoutId() {
@@ -76,6 +88,9 @@ public class MainActivity extends BaseActivity implements LoginView, UpLoadContr
 
         fileList.setAdapter(adapter);
         fileList.setOnItemClickListener((adapterView, view, i, l) -> {
+            if (isClick) return;
+            isClick = true;
+            handler.sendEmptyMessageDelayed(0,1000);
             String fileExtension = mFileData.get(i).getFileExtension();
             if (fileExtension.equals("jpg") || fileExtension.equals("png")) {
                 Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
@@ -205,6 +220,15 @@ public class MainActivity extends BaseActivity implements LoginView, UpLoadContr
             btnUpPic.setVisibility(View.VISIBLE);
         } else {
             btnUpPic.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (handler != null) {
+            handler.removeMessages(0);
+            handler = null;
         }
     }
 }
