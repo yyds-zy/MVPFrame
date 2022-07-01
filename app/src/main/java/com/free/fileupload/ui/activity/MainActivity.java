@@ -3,6 +3,7 @@ package com.free.fileupload.ui.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -152,7 +153,16 @@ public class MainActivity extends BaseActivity implements LoginView, UpLoadContr
 
     @Override
     public void upLoadSuccess(String data) {
-        Log.d("v_zyuanxue", data);
+        Toast.makeText(MainActivity.this, "上传文件成功", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void upLoadFail(String data) {
+        Toast.makeText(MainActivity.this, "上传文件失败", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showFileSuccess(String data) {
         Gson gson = new Gson();
         FileBean fileBean = gson.fromJson(data, FileBean.class);
         List<FileBean.DataBean> dataBeans = fileBean.getData();
@@ -161,9 +171,15 @@ public class MainActivity extends BaseActivity implements LoginView, UpLoadContr
     }
 
     @Override
-    public void upLoadFail(String data) {
-        Log.d("xzy", data);
-        Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
+    public void showFileFail(String data) {
+        String json = FileUtils.readJson(getExternalFilesDir(null).getAbsolutePath());
+        if (TextUtils.isEmpty(json)) return;
+        Gson gson = new Gson();
+        FileBean fileBean = gson.fromJson(json, FileBean.class);
+        mFileData.clear();
+        List<FileBean.DataBean> dataBeans = fileBean.getData();
+        mFileData.addAll(dataBeans);
+        adapter.notifyDataSetChanged();
     }
 
     @Override

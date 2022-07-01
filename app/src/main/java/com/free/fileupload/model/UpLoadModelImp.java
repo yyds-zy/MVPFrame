@@ -60,6 +60,7 @@ public class UpLoadModelImp implements UpLoadContract.UpLoadModel {
                     throw new IOException("Unexpected code " + response);
                 } else {
                     String string = response.body().string();
+                    FileUtils.createJsonFile(string,mContext.getExternalFilesDir(null).getAbsolutePath());
                     Message message = new Message();
                     message.obj = string;
                     message.what = 0;

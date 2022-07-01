@@ -27,5 +27,7 @@ public interface UpLoadContract {
         void hideProgress();
         void upLoadSuccess(String data);
         void upLoadFail(String data);
+        void showFileSuccess(String data);
+        void showFileFail(String data);
     }
 }

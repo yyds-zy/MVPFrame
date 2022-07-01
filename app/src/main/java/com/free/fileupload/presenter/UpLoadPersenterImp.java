@@ -31,12 +31,12 @@ public class UpLoadPersenterImp implements UpLoadContract.UpLoadPresenter,UpLoad
     @Override
     public void onSuccess(String data) {
         view.hideProgress();
-        view.upLoadSuccess(data);
+        view.showFileSuccess(data);
     }
 
     @Override
     public void onFail(String msg) {
         view.hideProgress();
-        view.upLoadFail(msg);
+        view.showFileFail(msg);
     }
 }
