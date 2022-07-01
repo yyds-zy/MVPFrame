@@ -82,6 +82,14 @@ public class MainActivity extends BaseActivity implements LoginView, UpLoadContr
         title.setText("新闻列表");
         meau.setVisibility(View.VISIBLE);
         mFileData = new ArrayList<>();
+        String json = FileUtils.readJson(getExternalFilesDir(null).getAbsolutePath());
+        if (!TextUtils.isEmpty(json)) {
+            Gson gson = new Gson();
+            FileBean fileBean = gson.fromJson(json, FileBean.class);
+            mFileData.clear();
+            List<FileBean.DataBean> dataBeans = fileBean.getData();
+            mFileData.addAll(dataBeans);
+        }
         adapter = new FileListAdapter(mFileData, this);
         upLoadPresenter = new UpLoadPersenterImp(new UpLoadModelImp(), this);
         upLoadPresenter.showFileList(MainActivity.this, currentPager, pageSize);
@@ -181,6 +189,9 @@ public class MainActivity extends BaseActivity implements LoginView, UpLoadContr
         Gson gson = new Gson();
         FileBean fileBean = gson.fromJson(data, FileBean.class);
         List<FileBean.DataBean> dataBeans = fileBean.getData();
+        if (dataBeans.size() > 0) {
+            mFileData.clear();
+        }
         mFileData.addAll(dataBeans);
         adapter.notifyDataSetChanged();
     }
