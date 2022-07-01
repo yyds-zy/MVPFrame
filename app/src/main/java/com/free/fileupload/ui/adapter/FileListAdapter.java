@@ -13,17 +13,21 @@ import com.free.fileupload.contract.UrlDef;
 import com.free.fileupload.model.bean.FileBean;
 import com.free.fileupload.util.MyBitmapUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FileListAdapter extends BaseAdapter {
     private List<FileBean.DataBean> mFileDataList;   //创建一个StudentData 类的对象 集合
     private LayoutInflater inflater;
     private Context mContext;
+    private Map<Integer,View> holderMap;
 
     public FileListAdapter(List<FileBean.DataBean> fileBeans, Context context) {
         mContext = context;
         this.mFileDataList = fileBeans;
         this.inflater = LayoutInflater.from(context);
+        holderMap = new HashMap<>();
     }
 
     @Override
@@ -42,8 +46,9 @@ public class FileListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
+    public View getView(int position, View view, ViewGroup viewGroup) {
         ViewHolder holder;
+        View convertView = holderMap.get(position);
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.file_layout, null);
             holder = new ViewHolder();
@@ -52,6 +57,7 @@ public class FileListAdapter extends BaseAdapter {
             holder.textView_context =  convertView.findViewById(R.id.tv_context);
             holder.textView_time = convertView.findViewById(R.id.tv_time);
             convertView.setTag(holder);
+            holderMap.put(position,convertView);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
