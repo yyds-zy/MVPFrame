@@ -19,9 +19,9 @@ public class PreviewActivity extends BaseActivity implements PreViewContract.Vie
     ImageView image;
     PreViewContract.Presenter presenter;
     public static final String TAG = "PreviewActivity";
-    @BindView(R.id.title)
+    @BindView(R.id.toolbar_title)
     TextView title;
-    @BindView(R.id.meau)
+    @BindView(R.id.toolbar_meau)
     ImageView meau;
 
     @Override

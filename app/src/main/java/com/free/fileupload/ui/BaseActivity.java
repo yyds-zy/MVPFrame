@@ -19,6 +19,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setAppTheme();
         setContentView(getLayoutId());
         ButterKnife.bind(this);
+        setToolBar();
         init();
     }
 
@@ -34,6 +35,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract int getLayoutId();
 
     protected abstract void init();
+
+    protected void setToolBar(){}
 
     @Override
     protected void onDestroy() {

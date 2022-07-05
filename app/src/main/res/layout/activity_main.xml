@@ -3,49 +3,124 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#3F3F3F"
     tools:context=".ui.activity.MainActivity">
 
     <include layout="@layout/layout_toolbar"/>
-    <Button
-        android:text="上传信息"
-        android:id="@+id/btn_up_pic"
-        android:background="#03A9F4"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:visibility="gone"
+
+    <FrameLayout
+        android:id="@+id/fragment_layout"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
-    <Button
-        android:text="sp_保存数据"
-        android:visibility="gone"
-        android:id="@+id/sp_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="68dp">
+       <RelativeLayout
+           android:id="@+id/tab_home_bg"
+           android:layout_weight="1"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:clickable="true"
+           android:gravity="center">
+           <ImageView
+               android:id="@+id/tab_home_img"
+               android:src="@mipmap/tab_home_uncheck"
+               android:layout_centerInParent="true"
+               android:layout_width="30dp"
+               android:layout_height="30dp"/>
 
-    <Button
-        android:text="mmkv_保存数据"
-        android:visibility="gone"
-        android:id="@+id/mmkv_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+           <TextView
+               android:id="@+id/tab_home_tv"
+               android:layout_centerInParent="true"
+               android:layout_marginTop="3dp"
+               android:text="首页"
+               android:textSize="10sp"
+               android:textColor="@color/colorBlack"
+               android:layout_below="@+id/tab_home_img"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+       </RelativeLayout>
 
-    <com.free.fileupload.ui.view.SwipeFlushView
-        android:id="@+id/srl_swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#3f3f3f">
+       <RelativeLayout
+           android:id="@+id/tab_msg_bg"
+           android:layout_weight="1"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:clickable="true"
+           android:gravity="center">
+           <ImageView
+               android:id="@+id/tab_msg_img"
+               android:src="@mipmap/tab_msg_uncheck"
+               android:layout_centerInParent="true"
+               android:layout_width="30dp"
+               android:layout_height="30dp"/>
 
-        <ListView
-            android:id="@+id/file_list"
-            android:background="#3f3f3f"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"/>
+           <TextView
+               android:id="@+id/tab_msg_tv"
+               android:layout_centerInParent="true"
+               android:layout_marginTop="3dp"
+               android:text="消息"
+               android:textSize="10sp"
+               android:textColor="@color/colorBlack"
+               android:layout_below="@+id/tab_msg_img"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+       </RelativeLayout>
 
-    </com.free.fileupload.ui.view.SwipeFlushView>
+       <RelativeLayout
+           android:id="@+id/tab_discovery_bg"
+           android:layout_weight="1"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:clickable="true"
+           android:gravity="center">
+           <ImageView
+               android:id="@+id/tab_discovery_img"
+               android:src="@mipmap/tab_discovery_uncheck"
+               android:layout_centerInParent="true"
+               android:layout_width="30dp"
+               android:layout_height="30dp"/>
+
+           <TextView
+               android:id="@+id/tab_discovery_tv"
+               android:layout_centerInParent="true"
+               android:layout_marginTop="3dp"
+               android:text="发现"
+               android:textSize="10sp"
+               android:textColor="@color/colorBlack"
+               android:layout_below="@+id/tab_discovery_img"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+       </RelativeLayout>
+
+       <RelativeLayout
+           android:id="@+id/tab_me_bg"
+           android:layout_weight="1"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:clickable="true"
+           android:gravity="center">
+           <ImageView
+               android:id="@+id/tab_me_img"
+               android:src="@mipmap/tab_me_uncheck"
+               android:layout_centerInParent="true"
+               android:layout_width="30dp"
+               android:layout_height="30dp"/>
+
+           <TextView
+               android:id="@+id/tab_me_tv"
+               android:layout_centerInParent="true"
+               android:layout_marginTop="3dp"
+               android:text="我的"
+               android:textSize="10sp"
+               android:textColor="@color/colorBlack"
+               android:layout_below="@+id/tab_me_img"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+       </RelativeLayout>
+
+   </LinearLayout>
 
 </LinearLayout>
